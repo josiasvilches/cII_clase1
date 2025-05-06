@@ -1,0 +1,19 @@
+from multiprocessing import Process, Value
+import time
+
+def incrementar(valor):
+    for _ in range(100):
+        time.sleep(0.01)
+        with valor.get_lock():  # Protección con Lock automático
+            valor.value += 1
+
+if __name__ == '__main__':
+    numero = Value('i', 0)
+    procesos = [Process(target=incrementar, args=(numero,)) for _ in range(5)]
+
+    for p in procesos:
+        p.start()
+    for p in procesos:
+        p.join()
+
+    print("Valor final compartido:", numero.value)
