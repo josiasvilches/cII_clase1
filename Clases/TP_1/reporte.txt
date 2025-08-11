@@ -1,0 +1,19 @@
+=== REPORTE DE ANÁLISIS BIOMÉTRICO ===
+
+Información General:
+- Total de bloques: 60
+- Bloques con alertas: 0
+- Porcentaje de alertas: 0.0%
+
+Promedios Generales:
+- Frecuencia cardíaca promedio: 131.46 bpm
+- Presión arterial promedio: 114.09 mmHg
+- Oxígeno en sangre promedio: 91.87%
+
+Análisis de Alertas:
+No se detectaron alertas en ningún bloque.
+
+Verificación de Integridad:
+La cadena de bloques mantiene su integridad.
+
+Fecha del reporte: 2025-08-11 09:58:26 - 2025-08-11 09:59:25
