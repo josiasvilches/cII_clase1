@@ -1,0 +1,5 @@
+Proceso 0 (PID: 10679) escribió a las Fri Aug  8 21:45:27 2025
+Proceso 1 (PID: 10680) escribió a las Fri Aug  8 21:45:27 2025
+Proceso 2 (PID: 10681) escribió a las Fri Aug  8 21:45:27 2025
+Proceso 3 (PID: 10682) escribió a las Fri Aug  8 21:45:27 2025
+Proceso 4 (PID: 10683) escribió a las Fri Aug  8 21:45:27 2025

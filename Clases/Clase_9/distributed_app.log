@@ -1,0 +1,19 @@
+2025-08-10 01:23:00,983 - LoggerProcess - INFO - Worker 0 (Worker-0): Realizando paso 0
+2025-08-10 01:23:00,983 - LoggerProcess - INFO - Worker 1 (Worker-1): Realizando paso 0
+2025-08-10 01:23:00,983 - LoggerProcess - INFO - Worker 2 (Worker-2): Realizando paso 0
+2025-08-10 01:23:01,521 - LoggerProcess - INFO - Worker 2 (Worker-2): Realizando paso 1
+2025-08-10 01:23:01,725 - LoggerProcess - INFO - Worker 1 (Worker-1): Realizando paso 1
+2025-08-10 01:23:01,963 - LoggerProcess - INFO - Worker 0 (Worker-0): Realizando paso 1
+2025-08-10 01:23:02,013 - LoggerProcess - INFO - Worker 2 (Worker-2): Realizando paso 2
+2025-08-10 01:23:02,222 - LoggerProcess - INFO - Worker 1 (Worker-1): Realizando paso 2
+2025-08-10 01:23:02,413 - LoggerProcess - INFO - Worker 0 (Worker-0): Realizando paso 2
+2025-08-10 01:23:02,704 - LoggerProcess - INFO - Worker 2 (Worker-2): Realizando paso 3
+2025-08-10 01:23:03,057 - LoggerProcess - INFO - Worker 0 (Worker-0): Realizando paso 3
+2025-08-10 01:23:03,138 - LoggerProcess - INFO - Worker 1 (Worker-1): Realizando paso 3
+2025-08-10 01:23:03,454 - LoggerProcess - INFO - Worker 2 (Worker-2): Realizando paso 4
+2025-08-10 01:23:03,581 - LoggerProcess - INFO - Worker 0 (Worker-0): Realizando paso 4
+2025-08-10 01:23:03,924 - LoggerProcess - INFO - Worker 0 (Worker-0): Trabajo finalizado.
+2025-08-10 01:23:03,995 - LoggerProcess - INFO - Worker 2 (Worker-2): Trabajo finalizado.
+2025-08-10 01:23:04,133 - LoggerProcess - INFO - Worker 1 (Worker-1): Realizando paso 4
+2025-08-10 01:23:04,566 - LoggerProcess - INFO - Worker 1 (Worker-1): Trabajo finalizado.
+2025-08-10 01:23:04,569 - LoggerProcess - INFO - Señal de parada recibida. Terminando logger.
