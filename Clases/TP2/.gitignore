@@ -1,0 +1,32 @@
+# Entorno virtual
+/flask
+venv/
+env/
+
+# Archivos temporales
+IMPLEMENTACION.md
+test_quick.sh
+tp2_indicaciones.md
+CORRECCIONES.md
+view_logs.sh
+restart_servers.sh
+
+
+# Logs
+logs/
+*.log
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~

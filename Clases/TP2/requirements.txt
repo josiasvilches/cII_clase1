@@ -1,0 +1,22 @@
+# Dependencias del TP2 - Sistema de Scraping y Análisis Web Distribuido
+
+# Cliente HTTP asíncrono
+aiohttp==3.9.1
+aiofiles==23.2.1
+
+# Parsing HTML
+beautifulsoup4==4.12.2
+lxml==4.9.3
+
+# Procesamiento de imágenes
+Pillow==10.1.0
+
+# Screenshots (opcional pero recomendado)
+selenium==4.11.2
+webdriver-manager==3.8.6
+
+# HTTP síncrono para análisis de rendimiento
+requests==2.31.0
+
+# Utilidades
+python-dateutil==2.8.2
