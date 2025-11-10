@@ -399,6 +399,59 @@ curl "http://localhost:8000/scrape?url=https://example.com"
 # Test de health
 curl "http://localhost:8000/health"
 ```
+---
+
+## Pruebas IPv6
+
+Se añadió un test E2E que verifica la conectividad IPv6 entre los servidores y la generación de artefactos (JSON completo y screenshot).
+
+Resumen:
+- Archivo de test: `tests/test_ipv6.py`
+- Qué hace: Arranca el servidor de procesamiento (Parte B) y el servidor de scraping (Parte A) enlazados a direcciones IPv6 (p. ej. `::1`), realiza una petición `/scrape?url=https://example.com`, espera la respuesta, y comprueba que tanto el JSON completo en `outputs/` como el screenshot en `screenshots/` se generan.
+
+Requisitos previos:
+- Tener instalado `pytest` en el entorno (si usa el virtualenv incluido en `flask/`, active el venv antes):
+
+```bash
+# Desde el entorno virtual del proyecto (si aplica)
+pip install pytest
+```
+
+Cómo ejecutar manualmente (pasos):
+
+1) Iniciar el servidor de procesamiento (Parte B) ligado a IPv6 ::1 (o a la interfaz que prefiera):
+
+```bash
+python3 server_processing.py -i ::1 -p 9000
+```
+
+2) Iniciar el servidor de scraping (Parte A) ligado a IPv6 y apuntando al servidor B:
+
+```bash
+python3 server_scraping.py -i :: -p 8000 --processing-host ::1 --processing-port 9000
+```
+
+3) Ejecutar el test específico (o toda la suite):
+
+```bash
+# Ejecutar solo el test IPv6
+python -m pytest tests/test_ipv6.py::test_ipv6_e2e_tmp_output -q
+
+# O ejecutar todos los tests
+python -m pytest tests/ -q
+```
+
+Notas y troubleshooting:
+- El test asume que la máquina tiene soporte IPv6 y que `::1` está disponible. Si su host no tiene IPv6 configurado, el test fallará. Puede adaptar el test para usar `127.0.0.1` si necesita validación solo en IPv4.
+- Asegúrese de que las dependencias estén instaladas en el mismo intérprete que usará para ejecutar `pytest` (por ejemplo, active `flask/` venv si corresponde).
+- El test arranca procesos temporales; si ve puertos ocupados o procesos colgados, detenga procesos previos (p. ej. `pkill -f server_processing.py` / `pkill -f geckodriver`), o reinicie la máquina.
+- Los artefactos generados por el test se almacenan en:
+   - `outputs/` (JSON completos)
+   - `screenshots/` (PNG cuando se usa `--save-screenshots` dentro del flujo de prueba)
+
+Si desea integrar este test en CI, asegúrese de que el runner tenga IPv6 habilitado o adapte el test para simular la parte de red.
+
+
 
 ---
 
