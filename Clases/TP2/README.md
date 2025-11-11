@@ -43,9 +43,15 @@ Cliente HTTP
 
 ## Instalación
 
-### 1. Instalar dependencias
+### 1. Entorno y dependencias
+
+Recomendado: usar el virtualenv incluido en `flask/` (ya preparado para la entrega).
 
 ```bash
+# Activar el virtualenv provisto (si lo usas)
+source flask/bin/activate
+
+# Instalar dependencias
 pip install -r requirements.txt
 ```
 
@@ -55,42 +61,39 @@ Opcional: pre-descargar drivers (reduce latencia en el primer arranque de Seleni
 python3 predownload_drivers.py
 ```
 
-### 2. Notas sobre navegadores/Drivers para screenshots
+#### Notas sobre navegadores/Drivers para screenshots
 
-Selenium requiere que exista un navegador instalado (Chrome/Chromium o Firefox).
-Este proyecto incluye `webdriver-manager` en `requirements.txt` para descargar
-automáticamente el driver (ChromeDriver) en tiempo de ejecución. Aun así, debe
-haber un navegador disponible en el sistema.
+Selenium requiere un navegador instalado (Chrome/Chromium o Firefox). El
+proyecto incluye `webdriver-manager` para descargar drivers automáticamente,
+pero debe existir un binario de navegador compatible en el sistema o indicar su
+ruta con `CHROME_BIN`.
 
-En Debian/Ubuntu puede instalar Chromium con:
+Instalación rápida en Debian/Ubuntu:
 
 ```bash
 sudo apt-get update && sudo apt-get install -y chromium-browser
 ```
 
-Si prefiere manejar drivers manualmente, instale el driver correspondiente y
-asegúrese de que esté en PATH.
+Comportamiento actual del backend de screenshots
+- Backend: Selenium (actualmente probado con Chrome/Chromium y Firefox).
+- El código intenta detectar el binario local y, si hace falta, usar
+  `webdriver-manager` / Selenium Manager para obtener el driver.
 
-Nota importante sobre el backend de screenshots
-- El sistema usa actualmente Selenium para generar screenshots. El código intenta
-   usar el binario de Chrome/Chromium del sistema cuando está disponible, y
-   recurre a `webdriver-manager` o a Selenium Manager para descargar el driver
-   automáticamente si hace falta.
-- Variables de entorno útiles:
-   - `BROWSER`: `chrome` o `firefox` (por defecto el código detecta automáticamente)
-   - `CHROME_BIN`: ruta al binario de Chrome/Chromium si no está en PATH
-   - `BROWSER_START_TIMEOUT`: segundos a esperar para que el navegador arranque (default: 60)
-- Si tiene problemas con drivers o versiones (ej. mismatch entre Chromium y
-   ChromeDriver), puede usar `predownload_drivers.py` (script incluido) para
-   forzar la descarga previa de drivers antes de ejecutar los servidores.
+Variables de entorno útiles:
+- `BROWSER`: fuerza el backend de screenshots (`chrome` o `firefox`).
+- `CHROME_BIN`: ruta absoluta al binario de Chrome/Chromium si no está en PATH.
+- `BROWSER_START_TIMEOUT`: segundos a esperar por el navegador al arrancar
+  (default: 60).
 
-Problemas frecuentes en entornos con Snap
-- En algunas distribuciones (Ubuntu) Chromium/Firefox instalados vía `snap`
-   pueden tener restricciones (sandbox/profiles) que impidan que Selenium
-   levante una sesión correctamente (errores como "DevToolsActivePort file
-   doesn't exist" o perfiles bloqueados). Si esto ocurre y no puede solucionarlo
-   fácilmente, la opción recomendable es instalar Google Chrome/Chromium desde
-   el paquete deb oficial o usar una imagen de contenedor que incluya Chrome.
+Si hay mismatches (Chromium vs ChromeDriver) o problemas de arranque, use
+`python3 predownload_drivers.py` para forzar la descarga previa de drivers y
+evitar sorpresas en tiempo de ejecución.
+
+Problemas frecuentes con Snap
+- En Ubuntu, Chromium/Firefox instalados vía `snap` pueden provocar errores
+  tipo "DevToolsActivePort file doesn't exist" o problemas con perfiles.
+  Recomendación: instalar Chrome/Chromium desde paquete deb o usar un
+  contenedor con Chrome instalado si tiene problemas con snaps.
 ---
 
 ## Uso
@@ -166,19 +169,20 @@ python3 client.py -s http://localhost:8000 -u https://python.org --save-screensh
 - Ejemplo: `screenshots/example_com_20251023_150430.png`
 - El directorio se crea automáticamente si no existe
 
+
 ### Salida del cliente y JSON completo
 
-El cliente `client.py` ahora imprime una versión legible y ordenada del JSON
-recibido y además guarda el JSON completo (incluyendo la cadena base64 del
-screenshot) en `outputs/` con nombre ` <dominio>_<timestamp>.json`.
+El cliente `client.py` imprime una versión legible y ordenada del JSON recibido
+y además guarda el JSON completo (incluyendo la cadena base64 del screenshot)
+en `outputs/` con nombre `<dominio>_<timestamp>.json`.
 
-- En consola verás un JSON ordenado (claves en orden alfabético) donde el
-   campo `processing_data.screenshot` se sustituye por un placeholder del tipo
-   `"<base64 N chars>"` para evitar volcar la imagen entera en la terminal.
-- Si usas `--save-screenshots`, además se guardará la imagen real en
-   `screenshots/` y el cliente imprimirá la ruta del archivo guardado.
-- El JSON completo se guarda para inspección posterior; esto facilita subir
-   resultados o revisarlos sin perder los datos binarios en la terminal.
+- En consola: JSON ordenado (claves en orden alfabético). El campo
+   `processing_data.screenshot` se reemplaza por un placeholder `"<base64 N chars>"`
+   para no imprimir el blob completo.
+- Si se usa `--save-screenshots`, la imagen real se guardará en `screenshots/`
+   y el cliente imprimirá la ruta del archivo.
+- El JSON completo se guarda para inspección posterior (útil para subir o
+   depurar resultados sin perder los datos binarios).
 
 Ejemplo de ejecución:
 
@@ -387,18 +391,38 @@ El sistema implementa manejo robusto de errores:
 
 ---
 
-## Testing
+### Testing
+
+Se usan tests basados en `pytest`. Hay tres tipos de pruebas en `tests/`:
+
+- unitarias para `scraper` (`tests/test_scraper.py`) y `processor`
+   (`tests/test_processor.py`) — rápidas, sin red ni navegador.
+- pruebas de screenshot (`tests/test_screenshot.py`) — requieren navegador/driver
+   (pueden omitirse en runners sin navegador).
+- test E2E IPv6 (`tests/test_ipv6.py`) — arranca los servidores y valida la
+   cadena E2E sobre IPv6; requiere que el host tenga IPv6 habilitado.
+
+Ejecutar tests (recomendado dentro del venv `flask/` si lo usa):
 
 ```bash
-# Ejecutar tests (cuando estén implementados)
-python -m pytest tests/
+# Activar entorno
+source flask/bin/activate
 
-# Test manual con curl
-curl "http://localhost:8000/scrape?url=https://example.com"
+# Instalar pytest si falta
+pip install pytest
 
-# Test de health
-curl "http://localhost:8000/health"
+# Ejecutar toda la suite
+python -m pytest tests/ -q
+
+# Ejecutar solo tests unitarios rápidos
+python -m pytest tests/test_scraper.py tests/test_processor.py -q
+
+# Ejecutar solo el test IPv6 (requiere IPv6 y puertos libres)
+python -m pytest tests/test_ipv6.py::test_ipv6_e2e_tmp_output -q
 ```
+
+También hay un script helper `run_tests.sh` que ejecuta la batería de pruebas
+locales; puede editarse para adaptarse a CI.
 ---
 
 ## Pruebas IPv6
